@@ -128,9 +128,13 @@
   <ItemGroup>
     <ClCompile Include="..\Vendors\GLAD\src\glad.c" />
     <ClCompile Include="src\GladOpenGL.cpp" />
+    <ClCompile Include="src\Shader\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core.h" />
+    <ClInclude Include="src\Input\KeyBoard.h" />
+    <ClInclude Include="src\Shader\Shader.h" />
+    <ClInclude Include="src\Shader\ShaderProgram.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

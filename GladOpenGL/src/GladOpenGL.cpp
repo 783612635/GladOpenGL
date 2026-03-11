@@ -1,17 +1,11 @@
 #include <iostream>
-#include <glad/glad.h> 
-#include <GLFW/glfw3.h>
+#include "Input/KeyBoard.h" 
+#include "Shader/Shader.h"
+#include "Shader/ShaderProgram.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
-}
-
-void processInput(GLFWwindow* window)
-{
-    //如果按下ESC键，关闭窗口并退出程序
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
 }
 
 float vertices[] = {
@@ -91,32 +85,30 @@ int main()
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
     glEnableVertexAttribArray(0);
 
-    unsigned int VS;
-    VS = glCreateShader(GL_VERTEX_SHADER);
-    const char* src = vertexShaderSource.c_str();
-    glShaderSource(VS, 1, &src, NULL);
-    glCompileShader(VS);
+    Shader VS(GL_VERTEX_SHADER);
+    VS.GetSourceAndCompile(vertexShaderSource);
 
-    unsigned int FS = glCreateShader(GL_FRAGMENT_SHADER);
-    const char* fsSrc = fragmentShaderSource.c_str();
-    glShaderSource(FS, 1, &fsSrc, NULL);
-    glCompileShader(FS);
+    Shader FS(GL_FRAGMENT_SHADER);
+    FS.GetSourceAndCompile(fragmentShaderSource);
 
-    unsigned int SP = glCreateProgram();
-    glAttachShader(SP, VS);
-    glAttachShader(SP, FS);
-    glLinkProgram(SP);
+    ShaderProgram sp;
+    sp.AttachShader(VS.shaderId);
+    sp.AttachShader(FS.shaderId);
+    sp.LinkProgarm();
 
-    glDeleteShader(VS); glDeleteShader(FS);
+    VS.DeleteShader();
+    FS.DeleteShader();
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    KeyBoard keyBoard(window);
 
     int fps = 0;
 
     while (!glfwWindowShouldClose(window))
     {
         fps++;
-        processInput(window);
+        keyBoard.ProcessInput();
 
         //glClearColor来设置清空屏幕所用的颜色。当调用glClear函数，清除颜色缓冲之后，整个颜色缓冲都会被填充为glClearColor里所设置的颜色。在这里，我们将屏幕设置为了类似黑板的深蓝绿色。
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -124,7 +116,7 @@ int main()
         // 由于现在我们只关心颜色值，所以我们只清空颜色缓冲。
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(SP);
+        glUseProgram(sp.id);
         glBindVertexArray(VAO);
         //glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -134,7 +126,9 @@ int main()
         glfwPollEvents();
     }
 
-    glDeleteProgram(SP);
+    sp.DeleteProgram();
     glfwTerminate();
+
+    std::cout << "Exit..." << "\n";
     return 0;
 }
