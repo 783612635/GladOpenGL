@@ -128,13 +128,22 @@
   <ItemGroup>
     <ClCompile Include="..\Vendors\GLAD\src\glad.c" />
     <ClCompile Include="src\GladOpenGL.cpp" />
-    <ClCompile Include="src\Shader\Shader.cpp" />
+    <ClCompile Include="src\Renderer\GLBuffer.cpp" />
+    <ClCompile Include="src\Renderer\GLStateCache.cpp" />
+    <ClCompile Include="src\Renderer\Mesh.cpp" />
+    <ClCompile Include="src\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Renderer\VertexArray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core.h" />
     <ClInclude Include="src\Input\KeyBoard.h" />
-    <ClInclude Include="src\Shader\Shader.h" />
-    <ClInclude Include="src\Shader\ShaderProgram.h" />
+    <ClInclude Include="src\Renderer\GLBuffer.h" />
+    <ClInclude Include="src\Renderer\GLStateCache.h" />
+    <ClInclude Include="src\Renderer\Mesh.h" />
+    <ClInclude Include="src\Renderer\Shader.h" />
+    <ClInclude Include="src\Renderer\ShaderProgram.h" />
+    <ClInclude Include="src\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Renderer\VertexLayout.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

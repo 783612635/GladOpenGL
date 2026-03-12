@@ -21,7 +21,19 @@
     <ClCompile Include="src\GladOpenGL.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader\Shader.cpp">
+    <ClCompile Include="src\Renderer\Shader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\GLBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\VertexArray.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Mesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\GLStateCache.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,10 +44,25 @@
     <ClInclude Include="src\Input\KeyBoard.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\Shader\Shader.h">
+    <ClInclude Include="src\Renderer\Shader.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\Shader\ShaderProgram.h">
+    <ClInclude Include="src\Renderer\ShaderProgram.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\GLBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\VertexArray.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\VertexLayout.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Mesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\GLStateCache.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

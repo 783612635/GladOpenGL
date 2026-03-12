@@ -1,7 +1,8 @@
 #include <iostream>
 #include "Input/KeyBoard.h" 
-#include "Shader/Shader.h"
-#include "Shader/ShaderProgram.h"
+#include "Renderer/Shader.h"
+#include "Renderer/ShaderProgram.h"
+#include "Renderer/Mesh.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -15,7 +16,8 @@ float vertices[] = {
     -0.5f,  0.5f
 };
 
-unsigned int indices[] = {0,1,2,
+unsigned int indices[] =
+{0,1,2,
 2,3,0};
 
 std::string vertexShaderSource = "#version 330 core\n"
@@ -59,31 +61,13 @@ int main()
         return -1;
     }
 
-    //开始渲染之前还有一件重要的事情要做，
-    //我们必须告诉OpenGL渲染窗口的尺寸大小，
-    //即视口(Viewport)，这样OpenGL才只能
-    //知道怎样根据窗口大小显示数据和坐标。
-    //注意，处理过的OpenGL坐标范围只为-1到1，
-    //因此我们事实上将(-1到1)范围内的坐标映射到(0, 800)和(0, 600)。
     glViewport(0, 0, 1920, 1080);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
+    VertexLayout layout;
+    layout.Push<float>(0, 2);
 
-    unsigned int IBO;
-    glGenBuffers(1, &IBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-    glEnableVertexAttribArray(0);
+    Mesh mesh(vertices, sizeof(vertices), indices, sizeof(indices), layout);
 
     Shader VS(GL_VERTEX_SHADER);
     VS.GetSourceAndCompile(vertexShaderSource);
@@ -117,10 +101,8 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(sp.id);
-        glBindVertexArray(VAO);
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+        mesh.Draw();
+        mesh.UnBindVAO();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
