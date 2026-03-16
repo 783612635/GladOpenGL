@@ -47,9 +47,6 @@
     <ClInclude Include="src\Renderer\Shader.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\ShaderProgram.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\Renderer\GLBuffer.h">
       <Filter>头文件</Filter>
     </ClInclude>

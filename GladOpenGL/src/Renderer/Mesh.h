@@ -14,7 +14,8 @@ public:
         const VertexLayout& layout
     );
 
-    void Draw() const;
+    void DrawElements() const;
+    void DrawArrays(unsigned int index,unsigned int counts) const;
 
     void UnBindVAO() const { vao.UnBind(); }
 

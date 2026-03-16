@@ -1,8 +1,11 @@
 #include <iostream>
 #include "Input/KeyBoard.h" 
 #include "Renderer/Shader.h"
-#include "Renderer/ShaderProgram.h"
 #include "Renderer/Mesh.h"
+#include <windows.h>
+#include <filesystem>
+
+std::string exeDir;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -13,26 +16,14 @@ float vertices[] = {
     -0.5f,  -0.5f,  
     0.5f,   -0.5f,  
     0.5f,   0.5f,  
-    -0.5f,  0.5f
+    -0.5f,  0.5f,
+    0.5f,   0.5f,
+    -0.2f,  -0.4f
 };
 
 unsigned int indices[] =
 {0,1,2,
 2,3,0};
-
-std::string vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-
-std::string fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\0";
 
 int main()
 {
@@ -69,21 +60,9 @@ int main()
 
     Mesh mesh(vertices, sizeof(vertices), indices, sizeof(indices), layout);
 
-    Shader VS(GL_VERTEX_SHADER);
-    VS.GetSourceAndCompile(vertexShaderSource);
+    Shader shader("res/shader/vertex.vs", "res/shader/fragment.fs");
 
-    Shader FS(GL_FRAGMENT_SHADER);
-    FS.GetSourceAndCompile(fragmentShaderSource);
-
-    ShaderProgram sp;
-    sp.AttachShader(VS.shaderId);
-    sp.AttachShader(FS.shaderId);
-    sp.LinkProgarm();
-
-    VS.DeleteShader();
-    FS.DeleteShader();
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     KeyBoard keyBoard(window);
 
@@ -100,15 +79,18 @@ int main()
         // 由于现在我们只关心颜色值，所以我们只清空颜色缓冲。
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(sp.id);
-        mesh.Draw();
+        shader.Use();
+        float timeValue = glfwGetTime();
+        float redValue = sin(timeValue) / 2.0f + 0.5f;
+        shader.SetUniform4f("setColor", redValue, 0.f, 0.f, 1.f);
+        mesh.DrawElements();
         mesh.UnBindVAO();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    sp.DeleteProgram();
+    shader.DeleteShader();
     glfwTerminate();
 
     std::cout << "Exit..." << "\n";

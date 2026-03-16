@@ -19,7 +19,7 @@ Mesh::Mesh(const void* vertices, size_t vertexSize, const unsigned int* indices,
     vao.SetIndexBuffer(ebo);
 }
 
-void Mesh::Draw() const
+void Mesh::DrawElements() const
 {
     vao.Bind();
 
@@ -29,4 +29,11 @@ void Mesh::Draw() const
         GL_UNSIGNED_INT,
         nullptr
     );
+}
+
+void Mesh::DrawArrays(unsigned int index, unsigned int counts) const
+{
+    vao.Bind();
+
+    glDrawArrays(GL_TRIANGLES, index, counts);
 }

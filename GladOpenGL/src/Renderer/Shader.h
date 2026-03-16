@@ -5,13 +5,22 @@
 class Shader
 {
 public:
-	Shader(unsigned int shaderType) :shaderId(glCreateShader(shaderType)){}
+	Shader(const char* VertexSPath, const char* FragmentSPath);
 	~Shader() {}
 
 public:
-	unsigned int shaderId{0};
+	unsigned int shaderProgramId{0};
 
 public:
-	void GetSourceAndCompile(std::string source);
+	void Use() const;
+	void unUse() const { glUseProgram(0); }
+	void GetSourceAndCompile(unsigned int ShaderID,const char* source);
+	void CreateProgram(unsigned int vsID, unsigned int fsID);
 	void DeleteShader();
+
+	//Uniform
+	void setUniform1i(const std::string& name, int value) const;
+	void setUniform1f(const std::string& name, float value) const;
+	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+
 };
