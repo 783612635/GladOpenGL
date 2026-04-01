@@ -91,12 +91,12 @@ void Shader::DeleteShader()
 	glDeleteShader(shaderProgramId);
 }
 
-void Shader::setUniform1i(const std::string& name, int value) const
+void Shader::SetUniform1i(const std::string& name, int value) const
 {
 	glUniform1i(glGetUniformLocation(shaderProgramId, name.c_str()), value);
 }
 
-void Shader::setUniform1f(const std::string& name, float value) const
+void Shader::SetUniform1f(const std::string& name, float value) const
 {
 	glUniform1f(glGetUniformLocation(shaderProgramId, name.c_str()), value);
 }

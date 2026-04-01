@@ -19,8 +19,8 @@ public:
 	void DeleteShader();
 
 	//Uniform
-	void setUniform1i(const std::string& name, int value) const;
-	void setUniform1f(const std::string& name, float value) const;
+	void SetUniform1i(const std::string& name, int value) const;
+	void SetUniform1f(const std::string& name, float value) const;
 	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
 
 };

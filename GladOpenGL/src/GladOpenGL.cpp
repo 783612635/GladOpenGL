@@ -2,6 +2,7 @@
 #include "Input/KeyBoard.h" 
 #include "Renderer/Shader.h"
 #include "Renderer/Mesh.h"
+#include "Renderer/Texture.h"
 #include <windows.h>
 #include <filesystem>
 
@@ -13,17 +14,22 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 float vertices[] = {
-    -0.5f,  -0.5f,  
-    0.5f,   -0.5f,  
-    0.5f,   0.5f,  
-    -0.5f,  0.5f,
-    0.5f,   0.5f,
-    -0.2f,  -0.4f
+    //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
+         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
+        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
 };
 
 unsigned int indices[] =
 {0,1,2,
-2,3,0};
+0,2,3};
+
+float texCoord[] =
+{ 0.0f,0.0f,
+    1.0f,0.0f,
+    0.5f,1.0f
+};
 
 int main()
 {
@@ -44,7 +50,7 @@ int main()
         return -1;
     }
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);//开启垂直同步
+    //glfwSwapInterval(1);//开启垂直同步
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -56,21 +62,48 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     VertexLayout layout;
-    layout.Push<float>(0, 2);
+    layout.Push<float>(0, 3);
+    layout.Push<float>(1, 3);
+    layout.Push<float>(2, 2);
 
     Mesh mesh(vertices, sizeof(vertices), indices, sizeof(indices), layout);
+    Texture tex("res/pics/container.jpg",GL_TEXTURE_2D);
+    Texture tex2("res/pics/awesomeface.png", GL_TEXTURE_2D);
+
+    tex.Bind();
+    tex2.Bind(1);
 
     Shader shader("res/shader/vertex.vs", "res/shader/fragment.fs");
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     KeyBoard keyBoard(window);
+    keyBoard.BindKey(GLFW_KEY_ESCAPE, KeyState::Pressed,[&]() {
+        	glfwSetWindowShouldClose(window, true);
+	        std::cout << "Press Esc." << "\n";
+        });
+    keyBoard.BindKey(GLFW_KEY_DOWN, KeyState::Pressed,[&]() {
+        std::cout << "Press DownArrow." << "\n";
+        });
+    keyBoard.BindKey(GLFW_KEY_UP, KeyState::Pressed,[&]() {
+        std::cout << "Press UpArrow." << "\n";
+        });
 
-    int fps = 0;
-
+    int frameCount = 0;
+    double lastTime = glfwGetTime();
     while (!glfwWindowShouldClose(window))
     {
-        fps++;
+        frameCount++;
+        double currentTime = glfwGetTime();
+        // 每秒更新一次
+        if (currentTime - lastTime >= 1.0)
+        {
+            printf("FPS: %d\n", frameCount);
+
+            frameCount = 0;
+            lastTime += 1.0;
+        }
+
         keyBoard.ProcessInput();
 
         //glClearColor来设置清空屏幕所用的颜色。当调用glClear函数，清除颜色缓冲之后，整个颜色缓冲都会被填充为glClearColor里所设置的颜色。在这里，我们将屏幕设置为了类似黑板的深蓝绿色。
@@ -83,6 +116,11 @@ int main()
         float timeValue = glfwGetTime();
         float redValue = sin(timeValue) / 2.0f + 0.5f;
         shader.SetUniform4f("setColor", redValue, 0.f, 0.f, 1.f);
+        float offsetValue = sin(timeValue) / 2.0f;
+        shader.SetUniform1f("offset", offsetValue);
+        shader.SetUniform1f("alpha", offsetValue);
+        shader.SetUniform1i("ourTexture", 0);
+        shader.SetUniform1i("ourTexture2", 1);
         mesh.DrawElements();
         mesh.UnBindVAO();
 
