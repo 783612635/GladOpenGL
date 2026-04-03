@@ -140,6 +140,7 @@
     <ClInclude Include="src\Input\KeyBoard.h" />
     <ClInclude Include="src\Renderer\GLBuffer.h" />
     <ClInclude Include="src\Renderer\GLStateCache.h" />
+    <ClInclude Include="src\Renderer\Transform.h" />
     <ClInclude Include="src\Renderer\Mesh.h" />
     <ClInclude Include="src\Renderer\Shader.h" />
     <ClInclude Include="src\Renderer\stb_image.h" />

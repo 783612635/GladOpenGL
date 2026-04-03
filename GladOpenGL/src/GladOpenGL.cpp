@@ -75,7 +75,20 @@ int main()
 
     Shader shader("res/shader/vertex.vs", "res/shader/fragment.fs");
 
+    Mesh mesh2(vertices, sizeof(vertices), indices, sizeof(indices), layout);
+    //Shader shader2("res/shader/vertex.vs", "res/shader/fragment.fs");
+
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+    trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+    
+    glm::mat4 trans2 = glm::mat4(1.0f);
+    trans2 = glm::translate(trans2, glm::vec3(-0.5f, 0.5f, 0.0f));
+    
+
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    float alphaValue = 1.0f;
 
     KeyBoard keyBoard(window);
     keyBoard.BindKey(GLFW_KEY_ESCAPE, KeyState::Pressed,[&]() {
@@ -83,10 +96,12 @@ int main()
 	        std::cout << "Press Esc." << "\n";
         });
     keyBoard.BindKey(GLFW_KEY_DOWN, KeyState::Pressed,[&]() {
-        std::cout << "Press DownArrow." << "\n";
+        alphaValue = alphaValue - 0.1f < 0.f ? 0.f : (alphaValue - 0.1f);
+        std::cout << "Press DownArrow." << "\n" << "alphaValue:" << alphaValue << std::endl;
         });
     keyBoard.BindKey(GLFW_KEY_UP, KeyState::Pressed,[&]() {
-        std::cout << "Press UpArrow." << "\n";
+        alphaValue = alphaValue + 0.1f > 1.f ? 1.f : (alphaValue + 0.1f);
+        std::cout << "Press UpArrow." << "\n" << "alphaValue:" << alphaValue << std::endl;
         });
 
     int frameCount = 0;
@@ -117,12 +132,22 @@ int main()
         float redValue = sin(timeValue) / 2.0f + 0.5f;
         shader.SetUniform4f("setColor", redValue, 0.f, 0.f, 1.f);
         float offsetValue = sin(timeValue) / 2.0f;
+        shader.SetUniformMat4("transform", trans);
         shader.SetUniform1f("offset", offsetValue);
-        shader.SetUniform1f("alpha", offsetValue);
+        shader.SetUniform1f("alpha", alphaValue);
         shader.SetUniform1i("ourTexture", 0);
         shader.SetUniform1i("ourTexture2", 1);
+        
         mesh.DrawElements();
-        mesh.UnBindVAO();
+        //mesh.UnBindVAO();
+
+        //shader2.Use();
+        glm::mat4 transc = trans2;
+        transc = glm::scale(transc, glm::vec3(offsetValue, 1.0, 1.0));
+        shader.SetUniformMat4("transform", transc);
+        shader.SetUniform1f("offset", 0);
+        mesh2.DrawElements();
+        //mesh2.UnBindVAO();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
