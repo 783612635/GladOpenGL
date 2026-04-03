@@ -21,6 +21,50 @@ float vertices[] = {
         -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
 };
 
+float vertices_box[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};
+
 unsigned int indices[] =
 {0,1,2,
 0,2,3};
@@ -42,7 +86,10 @@ int main()
     //Mac OS X系统需要额外补充
 //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow* window = glfwCreateWindow(1920, 1080, "GladOpenGL", NULL, NULL);
+    unsigned int windowWidth = 1920;
+    unsigned int windowHeight = 1080;
+
+    GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "GladOpenGL", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -61,34 +108,34 @@ int main()
     glViewport(0, 0, 1920, 1080);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    glEnable(GL_DEPTH_TEST);
+
     VertexLayout layout;
     layout.Push<float>(0, 3);
-    layout.Push<float>(1, 3);
-    layout.Push<float>(2, 2);
+    layout.Push<float>(1, 2);
+    //layout.Push<float>(2, 2);
 
-    Mesh mesh(vertices, sizeof(vertices), indices, sizeof(indices), layout);
+    Mesh mesh(vertices_box, sizeof(vertices_box), indices, sizeof(indices), layout);
     Texture tex("res/pics/container.jpg",GL_TEXTURE_2D);
-    Texture tex2("res/pics/awesomeface.png", GL_TEXTURE_2D);
 
     tex.Bind();
-    tex2.Bind(1);
 
     Shader shader("res/shader/vertex.vs", "res/shader/fragment.fs");
 
-    Mesh mesh2(vertices, sizeof(vertices), indices, sizeof(indices), layout);
-    //Shader shader2("res/shader/vertex.vs", "res/shader/fragment.fs");
-
-    glm::mat4 trans = glm::mat4(1.0f);
-    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-    trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-    
-    glm::mat4 trans2 = glm::mat4(1.0f);
-    trans2 = glm::translate(trans2, glm::vec3(-0.5f, 0.5f, 0.0f));
-    
-
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    float alphaValue = 1.0f;
+    glm::vec3 cubePositions[] = {
+  glm::vec3(0.0f,  0.0f,  0.0f),
+  glm::vec3(2.0f,  5.0f, -15.0f),
+  glm::vec3(-1.5f, -2.2f, -2.5f),
+  glm::vec3(-3.8f, -2.0f, -12.3f),
+  glm::vec3(2.4f, -0.4f, -3.5f),
+  glm::vec3(-1.7f,  3.0f, -7.5f),
+  glm::vec3(1.3f, -2.0f, -2.5f),
+  glm::vec3(1.5f,  2.0f, -2.5f),
+  glm::vec3(1.5f,  0.2f, -1.5f),
+  glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
 
     KeyBoard keyBoard(window);
     keyBoard.BindKey(GLFW_KEY_ESCAPE, KeyState::Pressed,[&]() {
@@ -96,12 +143,10 @@ int main()
 	        std::cout << "Press Esc." << "\n";
         });
     keyBoard.BindKey(GLFW_KEY_DOWN, KeyState::Pressed,[&]() {
-        alphaValue = alphaValue - 0.1f < 0.f ? 0.f : (alphaValue - 0.1f);
-        std::cout << "Press DownArrow." << "\n" << "alphaValue:" << alphaValue << std::endl;
+        std::cout << "Press DownArrow." << "\n" ;
         });
     keyBoard.BindKey(GLFW_KEY_UP, KeyState::Pressed,[&]() {
-        alphaValue = alphaValue + 0.1f > 1.f ? 1.f : (alphaValue + 0.1f);
-        std::cout << "Press UpArrow." << "\n" << "alphaValue:" << alphaValue << std::endl;
+        std::cout << "Press UpArrow." << "\n" ;
         });
 
     int frameCount = 0;
@@ -123,31 +168,48 @@ int main()
 
         //glClearColor来设置清空屏幕所用的颜色。当调用glClear函数，清除颜色缓冲之后，整个颜色缓冲都会被填充为glClearColor里所设置的颜色。在这里，我们将屏幕设置为了类似黑板的深蓝绿色。
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        // 清屏，glClear函数来清空屏幕的颜色缓冲，它接受一个缓冲位(Buffer Bit)来指定要清空的缓冲，可能的缓冲位有GL_COLOR_BUFFER_BIT，GL_DEPTH_BUFFER_BIT和GL_STENCIL_BUFFER_BIT。
-        // 由于现在我们只关心颜色值，所以我们只清空颜色缓冲。
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0, 0.0));
+
+        glm::mat4 view = glm::mat4(1.0f);
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+        glm::mat4 projection = glm::mat4(1.0f);
+        projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100.0f);
 
         shader.Use();
-        float timeValue = glfwGetTime();
-        float redValue = sin(timeValue) / 2.0f + 0.5f;
-        shader.SetUniform4f("setColor", redValue, 0.f, 0.f, 1.f);
-        float offsetValue = sin(timeValue) / 2.0f;
-        shader.SetUniformMat4("transform", trans);
-        shader.SetUniform1f("offset", offsetValue);
-        shader.SetUniform1f("alpha", alphaValue);
-        shader.SetUniform1i("ourTexture", 0);
-        shader.SetUniform1i("ourTexture2", 1);
+        //float timeValue = glfwGetTime();
+        //float redValue = sin(timeValue) / 2.0f + 0.5f;
+        //shader.SetUniform4f("setColor", redValue, 0.f, 0.f, 1.f);
+        //float offsetValue = sin(timeValue) / 2.0f;
+        //shader.SetUniformMat4("Model", model);
+        //shader.SetUniformMat4("View", view);
+        //shader.SetUniformMat4("Projection", projection);
+        //shader.SetUniform1i("ourTexture", 0);
         
-        mesh.DrawElements();
-        //mesh.UnBindVAO();
+        //mesh.DrawElements();
+        //mesh.DrawArrays(0, 36);
 
-        //shader2.Use();
-        glm::mat4 transc = trans2;
-        transc = glm::scale(transc, glm::vec3(offsetValue, 1.0, 1.0));
-        shader.SetUniformMat4("transform", transc);
-        shader.SetUniform1f("offset", 0);
-        mesh2.DrawElements();
-        //mesh2.UnBindVAO();
+        for (unsigned int i = 0; i < 10; i++)
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            float angle = i == 0 ? (20.0f * (i + 1)) : 20.0f * i;
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            if (i == 0 || i % 3 == 0)
+            {
+                
+                model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            }
+            shader.SetUniformMat4("Model", model);
+            shader.SetUniformMat4("View", view);
+            shader.SetUniformMat4("Projection", projection);
+            shader.SetUniform1i("ourTexture", 0);
+
+            mesh.DrawArrays( 0, 36);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
