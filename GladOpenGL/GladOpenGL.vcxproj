@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="src\Core.h" />
     <ClInclude Include="src\Input\KeyBoard.h" />
+    <ClInclude Include="src\Renderer\Camera.h" />
     <ClInclude Include="src\Renderer\GLBuffer.h" />
     <ClInclude Include="src\Renderer\GLStateCache.h" />
     <ClInclude Include="src\Renderer\Transform.h" />

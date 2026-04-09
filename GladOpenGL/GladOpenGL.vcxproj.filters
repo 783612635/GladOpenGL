@@ -74,5 +74,8 @@
     <ClInclude Include="src\Renderer\Transform.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer\Camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
