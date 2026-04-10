@@ -126,7 +126,7 @@ float texCoord[] =
     0.5f,1.0f
 };
 
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 lightPos(1.2f, 0.0f, 5.0f);
 
 int main()
 {
@@ -268,7 +268,6 @@ int main()
         lightShader.SetUniformMat4("Model", lightModel);
         lightShader.SetUniformMat4("View", view);
         lightShader.SetUniformMat4("Projection", projection);
-        lightShader.SetUniform3f("lightPos", lightPos);
         lightBox.DrawArrays(0,36);
 
         shader.Use();
@@ -288,6 +287,34 @@ int main()
             shader.SetUniformMat4("Projection", projection);
             shader.SetUniform1i("ourTexture", 0);
             shader.SetUniform4f("lightColor", 1.0,1.0,1.0,1.0);
+            shader.SetUniform3f("lightPos", lightPos);
+
+            //// 假设我们要观察每个箱子的“正面”法线
+            //glm::vec3 localNormal = glm::vec3(0.0f, 0.0f, 1.0f);
+
+            //// 1. 将法线变换到世界空间 (使用你 Shader 里的逻辑)
+            //// 如果没有非等比缩放，直接用 mat3(model) 即可
+            //glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(model)));
+            //glm::vec3 worldNormal = glm::normalize(normalMatrix * localNormal);
+
+            //// 2. 计算从片段到光源的方向向量
+            //// 假设我们算的是箱子中心点的受光情况
+            //glm::vec3 fragPos = glm::vec3(model * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+            //glm::vec3 lightDir = glm::normalize(lightPos - fragPos);
+
+            //// 3. 计算点积并求得夹角 (弧度)
+            //float dotValue = glm::dot(worldNormal, lightDir);
+            //// 限制范围在 -1 到 1 之间防止 acos 出错
+            //float angleRadians = glm::acos(glm::clamp(dotValue, -1.0f, 1.0f));
+            //float angleDegrees = glm::degrees(angleRadians);
+
+            //// 4. 输出到控制台
+            //if (i == 0) { // 专门盯着那个总是很黑的 0 号箱子
+            //    std::cout << "Cube 0 - Face Normal: (" << worldNormal.x << ", " << worldNormal.y << ", " << worldNormal.z << ")"
+            //        << " | Angle to Light: " << angleDegrees << "°"
+            //        << (angleDegrees > 90.0f ? " [背光面 - BLACK]" : " [受光面 - LIT]")
+            //        << std::endl;
+            //}
 
             mesh.DrawArrays( 0, 36);
         }

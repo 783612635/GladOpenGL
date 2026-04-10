@@ -24,5 +24,8 @@ void main()
     vec4 texColor = texture(ourTexture, myTexCoord);
     vec3 result = (ambient+diffuse) * texColor.rgb;
    
-   FragColor = vec4(result,1.0);
+   //临时检测法线向量
+   //FragColor = vec4(Normal,1.0);
+  // FragColor = vec4(norm * 0.5 + 0.5,1.0);
+    FragColor = vec4(result,1.0);
 }
